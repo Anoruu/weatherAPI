@@ -3,6 +3,7 @@ import {NextFunction, Request, Response} from "express";
 import { weatherError } from "../middleware/errorHandler";
 import { WEATHER_API_ERROR_MESSAGE } from "../constantes/errorMessages";
 import { log } from "console";
+import { WEATHER_API_URL } from "../constantes/config";
 
 export class WeatherController {
     private API_KEY:string;
@@ -19,12 +20,13 @@ export class WeatherController {
         const city:string= req.params.city;
         console.log(city)
         try{
-            const response : AxiosResponse = await axios.get(`http://api.weatherapi.com/v1/current.json?key=${this.API_KEY}&q=${city}&lang=fr`);
+            const response : AxiosResponse = await axios.get(
+                `${WEATHER_API_URL}/current.json?key=${this.API_KEY}&q=${city}&lang=fr`);
             const data = response.data;
             res.json(data);
         }catch(error){
             next(new weatherError(WEATHER_API_ERROR_MESSAGE))
-        }
-    }
+                }
+            }
 }
 
