@@ -1,7 +1,8 @@
-import express, {Request, Response } from 'express';
+import express, {NextFunction, Request, Response } from 'express';
 import { parse } from 'path';
 
-import { WeatherController } from './WeatherController';
+import { WeatherController } from './controller/WeatherController';
+import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 const API_KEY = "90dc508c87c44caf8d5135453240102";
@@ -18,9 +19,11 @@ app.get("/test", (req:Request, res:Response) => {
 
 const weatherController = new WeatherController(API_KEY);
 
-app.get("/weather/:city", async ( req:Request, res:Response) => {
-    await weatherController.getWeather(req, res);
+app.get("/weather/:city", async ( req:Request, res:Response, next:NextFunction) => {
+    await weatherController.getWeather(req, res, next);
 })
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
 
